@@ -1,4 +1,6 @@
-local device = require("Libs.device")
+local currentFolder = (...):gsub(".soundPlayer", "")
+
+local device = require(currentFolder..".device")
 local audio = _G.audio
 
 -- Configs -------------------------------------------------------------------------------------------------------------
@@ -27,6 +29,20 @@ local eventSoundTable  = {}
 local volume = 1
 local paused = false
 
+
+-- Helpers -------------------------------------------------------------------------------------------------------------
+
+local function newAudioCallback(onComplete, onCancel)
+  if not onComplete and not onCancel then return end
+
+  return function(e)
+    if e.completed then
+      if onComplete then onComplete() end
+    else
+      if onCancel then onCancel() end
+    end
+  end
+end
 
 -- Media implementation ------------------------------------------------------------------------------------------------
 -- NOTE: Sometimes `media` works better on Android for sounds that needs to be played without any delay. (Like the sfx of a gun)
@@ -86,12 +102,15 @@ function SoundPlayer.play(sound, params)
   if paused or not canPlay(sound) then return end
   playTimeRegistry[sound] = system.getTimer()
 
+  params = params or {}
+  params.onComplete = newAudioCallback(params.onComplete, params.onCancel)
+
   if eventSoundTable[sound] then
     return playWithMedia(sound)
   end
 
   if not soundTable[sound] then
-    soundTable[sound] = audio.loadSound("Assets/Audio/Sfx/"..sound..defExt)
+    soundTable[sound] = audio.loadSound("Assets/Audio/Sfx/"..sound..(params.ext or defExt))
   end
 
   return audio.play(soundTable[sound], params)

@@ -1,26 +1,25 @@
-local device = require("Libs.device")
 local audio = _G.audio
-local Tween = require("Libs.tween")
 
--- Configs -------------------------------------------------------------------------------------------------------------
-
-local defExt
-local path = "Assets/Audio/"
-if device.isAndroid and not device.isSimulator then
-  path = path .. ""
-  defExt = ".ogg"
-else
-  path = path .. ""
-  defExt = ".aac"
-end
-
-local folder = path..""
+local currentFolder = (...):gsub(".musicPlayer", "")
+local device = require(currentFolder..".device")
+local Tween = require(currentFolder..".tween")
 
 ------------------------------------------------------------------------------------------------------------------------
 -- MusicPlayer --
 ------------------------------------------------------------------------------------------------------------------------
 
 local MusicPlayer = {}
+
+local path = "Assets/Audio/"
+if device.isAndroid and not device.isSimulator then
+  path = path .. ""
+  MusicPlayer.defExt = ".ogg"
+else
+  path = path .. ""
+  MusicPlayer.defExt = ".aac"
+end
+MusicPlayer.folder = path..""
+
 
 local tracks = {}
 
@@ -149,8 +148,8 @@ end
 function MusicPlayer.load(sound, ext)
   if tracks[sound] then return end
 
-  ext = ext or defExt
-  tracks[sound] = audio.loadSound(folder..sound..ext)
+  ext = ext or MusicPlayer.defExt
+  tracks[sound] = audio.loadSound(MusicPlayer.folder..sound..ext)
 
   assert(tracks[sound], "Can't load sound: \""..sound..ext.."\"" )
 end
@@ -200,9 +199,9 @@ local function getSequenceParams(data)
     return data, {}
   elseif type(data) == "table" then
     return data[1], {
-      loops = data.loops,
-      fade  = data.fade,
-      time  = data.time,
+      loops = data[2],
+      fade  = not not data[3],
+      time  = data[3],
     }
   end
 

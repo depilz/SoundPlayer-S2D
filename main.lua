@@ -14,8 +14,8 @@ SoundPlayer.load("sfx4", ".mp3")
 -- Creating some random sequences
 local sequences = {
   {"track1"},
-  {"track2", {"track3", fade = true, time = 5000}},
-  {"track1", {"track1", fade = true, time = 700}, {"track3", loops = 3}},
+  {"track2", {"track3", nil, 5000}},
+  {"track1", {"track1", nil, 700}, {"track3", 3}},
 }
 
 
