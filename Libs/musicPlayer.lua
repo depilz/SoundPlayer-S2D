@@ -66,13 +66,9 @@ end
 
 local function channelFadeOut(ch, time)
   local cb = function()
-    print("STOP!", ch, musicChannel)
-    print("-----------")
     audio.stop(ch)
-    print("-----------")
     timer.performWithDelay(0, function()
       channels[1]:setDelta(1)
-      print("-----------")
     end)
   end
 
@@ -182,8 +178,6 @@ end
 
 function MusicPlayer.fadeOut(time)
   if not MusicPlayer.isPlaying() then return end
-
-  print("fade out")
 
   masterVolume:transitionTo{
     time       = time or 2000,
