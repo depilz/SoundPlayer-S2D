@@ -29,15 +29,12 @@ MusicPlayer.defExt = ".mp3"
 
 * All sounds and images in this project are taken from the Internet and work under their own licenses.
 
+--------------
+
 # DOCUMENTATION
 
-## MusicPlayer
-
-* ### getDuration(sound)
-returns the durations of a <B>loaded</B> track. It doesn't work to get the duration of a full sequence.
-
-* ### isPlaying()
-Returs true if a music is being played.
+# MusicPlayer
+Designed to play music tracks and provide useful tools for it, the MusicPlayer reserves the first 2 audio channels for this purpose.
 
 * ### load(track [,ext])
 Loads a track located in the audio folder. The track is the actual name of the file and the extension is optional, if not provided it uses `.ogg` for Android and `.aac` for iOS.
@@ -50,8 +47,8 @@ Plays some of the loaded tracks. The `track` is the same you used before on `loa
 You can also send some parameters containing the following entries:
  - loops: How many times it is going to play/repeat until completion. (default is -1)
  - ext: If the track has not been loaded yet, this method will also try to load it, so specifying the extension could be useful in such case.
- - onComplete: Only called if the track has succesfully finish playing.
- - onCancel: Called if the track has being stoped for wathever reason witouth completion.
+ - onComplete: Listener for the audio succesful completion.
+ - onCancel: Listener for the audio playing cancellation.
  
 ```lua
 MusicPlayer.play("my song", {
@@ -63,7 +60,7 @@ MusicPlayer.play("my song", {
 
 * ### fade(track [,params])
 This method fades-out the current playing track and fades-in the one provided. It could also be used to simply fade-in a track when no music is being played at the moment.
-The params are the same as in the `play` method with the only difference that this could also contain the entre `time`.
+The params are the same as in the `play` method with the only difference that this could also contain the `time` entry.
   - time: The time it takes to fade the tracks. default is 700 (ms).
 
 ```lua
@@ -74,10 +71,16 @@ MusicPlayer.fade("my song", {
 ```
 
 * ### fadeOut(time)
-Fades out the current the entire music, so it works normally even if you are currently fading 2 tracks.
+Fades out the entire music, so it works normally even if it is currently fading 2 tracks.
+
+* ### getDuration(sound)
+Returns the durations of a <B>loaded</B> track. It doesn't work to get the duration of a full sequence.
+
+* ### isPlaying()
+Returs true if a music is being played.
 
 * ### setVolume(v)
-Sets the master volume of the music.
+Sets the master volume of the music. It does not interfere with any fading action.
 
 * ### resume()
 Resumes playing.
@@ -89,7 +92,7 @@ Pauses the music.
 Completely stops playing a music or a sequence.
 
 
-## MusicPlayer sequences
+# MusicPlayer sequences
 Still part of the MusicPlayer library, the music sequences are useful when you have a set of tracks that need to be played one after the other, eiher if the structure is something like: 
 `intro` -> `loop for ever`
 
@@ -100,7 +103,7 @@ Or if you want to increase the tension in a battle by leveling up (by command) t
 The sequence is an array with the necessary data to play each track.
 The node could be either a string or a table:
   * String: Just plays the specified track.
-  * Table: Containing the `track`, the `loops`, and the `fadeInTime` in that order. Only the `track` is mandatory, `loops` is -1 by default.
+  * Table: Containing the `track`, the `loops`, and the `fadeTime` in that order. Only the `track` is mandatory, `loops` is -1 by default and fadeTime is `nil`.
 
 ```lua
 local sequence1 = {track1, track2, {track3, nil, 800}}
@@ -111,16 +114,24 @@ Now, the following methods are useful to handle this sequences:
 
 * ### playSequence(sequence [,onComplete])
 Plays a sequence of tracks that could be played one after the other or controlled by the method `playNext`.
-The onComplete functional is optional and is going to be called when the last track ends. (Also works when `PlayNext` is called to end a sequence)
+The onComplete function is optional and is going to be called when the last track ends. (Also works when `PlayNext` is called to end a sequence)
+```lua
+local sequence = {track1, track2, {track3, nil, 800}}
+MusicPlayer.playSequence(sequence, showGameOver)
+```
 
 * ### fadeSequence(sequence [,time] [,onComplete])
 Fades the sequence provided with the current track or simply fades-in if not existent. `time` is the time it takes to fade and `onComplete` is the same as for `playSequence`
+```lua
+local sequence = {track1, track2, {track3, nil, 800}}
+MusicPlayer.fadeSequence(sequence, showGameOver)
+```
 
 * ### playNext()
 It plays the next track in a sequence. Returns the name of the track and `nil` if the sequence has ended or has never been started.
 
 * ### loadSequences(data)
-You can preload a set of sequences so you can play them later just using a string.
+You can predefine a set of sequences so you can play them later simply by passing a string.
 
 ```lua
 local sequences = {
@@ -133,7 +144,9 @@ MusicPlayer.loadSequences(sequences)
 MusicPlayer.playSequence("sequence1")
 ```
 
-## SoundPlayer
+NOTE: This is not going to load the tracks, you have to do that manually with `MusicPlayer.load()`.
+
+# SoundPlayer
 Specifically designed to play sound effects, but could also be used to play enviromental sounds, such as wind or crickets.
 
 * ### getDuration(sound)
@@ -174,6 +187,6 @@ Pause all current sounds.
 * ### stop()
 Completly stops playing all sounds.
 
-
-## License
+--------
+# License
 [MIT](https://choosealicense.com/licenses/mit/)
