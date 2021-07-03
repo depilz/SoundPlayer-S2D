@@ -5,11 +5,19 @@ I have separated both in 2 different files (Music and sfx) so it is easier to un
 
 ## SETUP
 
-You need to copy the `tween` and `device` lua files in the same folder of `soundPlayer` and `musicPlayer`.
+You need to copy the `tween` and `device` lua files in the same folder as the `soundPlayer` and the `musicPlayer`.
 
 By default the audio folder is `Assets/Audio`, but you can change this by setting the `folder` attribute in both the sound and music players.
+```lua
+SoundPlayer.folder = "assets/audio/sfx/"
+MusicPlayer.folder = "assets/audio/music/"
+```
 
 The default extensions are `.ogg` for android and `.aac` for evertying else. You can change this by setting the `defExt` attribute in both libraries.
+```lua
+SoundPlayer.defExt = ".mp3"
+MusicPlayer.defExt = ".mp3"
+```
 
 ## Extra notes
 
@@ -30,7 +38,7 @@ returns the durations of a <B>loaded</B> track. It doesn't work to get the durat
 Returs true if a music is being played.
 
 * ### load(track [,ext])
-Loads a track located in the audio folder. The track is the actual name of the file and the extension is optional, if not provided it uses ".ogg" for Android and ".aac" for iOS.
+Loads a track located in the audio folder. The track is the actual name of the file and the extension is optional, if not provided it uses `.ogg` for Android and `.aac` for iOS.
 ```lua
 MusicPlayer.load("my song", ".wav")
 ```
