@@ -14,9 +14,10 @@ I have separated both in 2 different files (Music and sfx) so it is easier to un
 ## Table of contents
 * [Setup](#setup)
 * [Notes](#notes)
-* [MusicPlayer](#musicplayer)
-* [MusicPlayer sequences](#musicplayer-sequences) 
-* [SoundPlayer](#soundplayer)
+* [Documentation](#documentation)
+  * [MusicPlayer](#musicplayer)
+  * [MusicPlayer sequences](#musicplayer-sequences) 
+  * [SoundPlayer](#soundplayer)
 * [Contributing](#contributing)
 * [Author](#author)
 * [License](#license)
@@ -53,6 +54,8 @@ DOCUMENTATION
 
 # MusicPlayer
 Designed to play music tracks and provide useful tools for it, the MusicPlayer reserves the first 2 audio channels for this purpose.
+
+## Methods
 
 * ### load(track [, ext])
   * Loads a track located in the audio folder. The track is the actual name of the file and the extension is optional, if not provided it uses `.ogg` for Android and `.aac` for iOS.
@@ -125,6 +128,7 @@ The node could be either a string or a table:
 
 Now, the following methods are useful to handle these sequences:
 
+## Methods
 * ### playSequence(sequence [, onComplete])
   * Plays a sequence of tracks that could be played one after the other or controlled by the method `playNext`.
   * The onComplete function is optional and is going to be called when the last track ends. (Also works when `PlayNext` is called to end a sequence)
@@ -162,8 +166,10 @@ Now, the following methods are useful to handle these sequences:
 
 
 # SoundPlayer
+
 Specifically designed to play sound effects, but could also be used to play enviromental sounds, such as wind or crickets.
 
+## Methods
 * ### load(sound [, ext] [, useMediaForAndroid])
   * Pre-loads a sound. The extension works the same as in the MusicPlayer and `useMediaForAndroid` is a flag used if you **NEED** a sound to be loaded and played using the `media` library instead of `audio`, this <I>could</I> be useful if a sound is not being played instantly on Android, but `media` does't have a volume control so it just plays or not depending of the SoundPlayer volume.
      ```lua
@@ -212,4 +218,4 @@ Check the contributing guide.
   * Github: [@depilz](https://github.com/depilz)
 
 # License
-[MIT](https://choosealicense.com/licenses/mit/)
+📝 [MIT](https://choosealicense.com/licenses/mit/)
