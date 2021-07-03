@@ -5,7 +5,7 @@
 <h1 align="center">
 MUSIC & SOUND PLAYERS FOR SOLAR2D
 </h1>
- 
+
 ## Description
 In the effort of making the sound control in Solar2D more enjoyable, I have created the SoundPlayer and the MusicPlayer libraries that I'm sharing in this project.
 
@@ -16,7 +16,7 @@ I have separated both in 2 different files (Music and sfx) so it is easier to un
 * [Notes](#notes)
 * [Documentation](#documentation)
   * [MusicPlayer](#musicplayer)
-  * [MusicPlayer sequences](#musicplayer-sequences) 
+  * [MusicPlayer sequences](#musicplayer-sequences)
   * [SoundPlayer](#soundplayer)
 * [Contributing](#contributing)
 * [Author](#author)
@@ -64,7 +64,7 @@ Designed to play music tracks and provide useful tools for it, the MusicPlayer r
      ```
 
 * ### play(track [, params])
-  * Plays some of the loaded tracks. The `track` is the same used before on `load()`. 
+  * Plays some of the loaded tracks. The `track` is the same used before on `load()`.
   * You can also send some parameters containing the following entries:
     * **loops**: How many times it is going to play/repeat until completion. (default is -1)
     * **ext**: If the track has not been loaded yet, this method will also try to load it, so specifying the extension could be useful in such case.
@@ -72,8 +72,8 @@ Designed to play music tracks and provide useful tools for it, the MusicPlayer r
     * **onCancel**: Listener for the audio playing cancellation.
      ```lua
      MusicPlayer.play("my song", {
-       loops      = 3, 
-       onComplete = playNextSong, 
+       loops      = 3,
+       onComplete = playNextSong,
        onCancel   = printSomething,
      })
      ```
@@ -113,7 +113,8 @@ The params are the same as in the `play` method with the only difference that th
 
 
 # MusicPlayer sequences
-Still part of the MusicPlayer library, the music sequences are useful when you have a set of tracks that need to be played one after the other, eiher if the structure is something like:  `intro` -> `loop for ever`
+Still part of the MusicPlayer library, the music sequences are useful when you have a set of tracks that need to be played one after the other, eiher if the structure is something like:`intro` -> `loop for ever`.
+
 Or if you want to increase the tension in a battle by leveling up (by command) the strenght of the song.
   `starts slow` -> `battle started` -> `boss phase 2` -> `boss phase 3` -> `track ends`
 
@@ -154,9 +155,9 @@ Now, the following methods are useful to handle these sequences:
        sequence1 = {track1, track2, {track3, nil, 800}}
        sequence2 = {{track1, 1}, {track2, 1}, {track3, 1}}
      }
-     
+
      MusicPlayer.loadSequences(sequences)
- 
+
      MusicPlayer.playSequence("sequence1")
      ```
 

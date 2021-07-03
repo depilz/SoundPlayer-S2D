@@ -58,18 +58,20 @@ local masterVolume = Tween:new(1, nil, 1, {
 local function channelFadeIn(ch, time)
   channels[ch]:setDelta(0)
   channels[ch]:transitionTo{
-    time  = time,
-    value = 1,
+    time     = time,
+    value    = 1,
+    onCancel = function()
+      channels[ch]:setDelta(1)
+    end
   }
 end
-
 
 local function channelFadeOut(ch, time)
   local cb = function()
     audio.stop(ch)
-    timer.performWithDelay(0, function()
-      channels[1]:setDelta(1)
-    end)
+    -- timer.performWithDelay(0, function()
+      channels[ch]:setDelta(1)
+    -- end)
   end
 
   channels[ch]:transitionTo{
@@ -82,12 +84,12 @@ end
 
 
 local function stop()
+  audio.stop(1)
+  audio.stop(2)
+
   channels[1]:setDelta(1)
   channels[2]:setDelta(1)
   masterVolume:setDelta(1)
-
-  audio.stop(1)
-  audio.stop(2)
 end
 
 
@@ -141,25 +143,25 @@ function MusicPlayer.isPlaying()
 end
 
 
-function MusicPlayer.load(sound, ext)
-  if tracks[sound] then return end
+function MusicPlayer.load(track, ext)
+  if tracks[track] then return end
 
   ext = ext or MusicPlayer.defExt
-  tracks[sound] = audio.loadSound(MusicPlayer.folder..sound..ext)
+  tracks[track] = audio.loadSound(MusicPlayer.folder..track..ext)
 
-  assert(tracks[sound], "Can't load sound: \""..sound..ext.."\"" )
+  assert(tracks[track], "Can't load track: \""..track..ext.."\"" )
 end
 
 
-function MusicPlayer.play(sound, params)
+function MusicPlayer.play(track, params)
   MusicPlayer.stop()
 
-  play(sound, params)
+  play(track, params)
 end
 
 
 -- You can use this to fade 2 tracks or just to fade-in
-function MusicPlayer.fade(sound, params)
+function MusicPlayer.fade(track, params)
   params = params or {}
   local time = params.time or 700
 
@@ -170,7 +172,7 @@ function MusicPlayer.fade(sound, params)
   end
 
   -- FadeIn new music
-  play(sound, params)
+  play(track, params)
 
   channelFadeIn(musicChannel, time)
 end

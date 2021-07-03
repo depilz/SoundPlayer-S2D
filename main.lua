@@ -14,8 +14,8 @@ SoundPlayer.load("sfx4", ".mp3")
 -- Creating some random sequences
 local sequences = {
   {"track1"},
-  {"track2", {"track3", nil, 5000}},
-  {"track1", {"track1", nil, 700}, {"track3", 3}},
+  {"track2", {"track3", nil, 500}},
+  {"track1", {"track2", nil, 700}, {"track3", 3}},
 }
 
 
@@ -123,6 +123,9 @@ local function playNext()
     index = (index%#sequences)+1
     track = MusicPlayer.playSequence(sequences[index])
   end
+  print(" \n---- Playing ----")
+  print("track:    "..track)
+  print("sequence: "..index)
 end
 
 

@@ -18,26 +18,23 @@ end
 -- Tween --
 -- ---------------------------------------------------------------------------------------------------------------------
 
-
-function Tween:printAll(t)
-  print(t, self._delta, self._scale, self:getValue())
-end
-
 function Tween:initialize(start, ease, scale, listeners)
   self._delta = start or 0
   self._ease  = ease or easing.linear
   self._scale = scale or 1
 
   self._onStart    = listeners.onStart
-  self._onUpdate   = listeners.onUpdate
   self._onPause    = listeners.onPause
   self._onResume   = listeners.onResume
   self._onComplete = listeners.onComplete
   self._onCancel   = listeners.onCancel
+  self._onUpdate   = listeners.onUpdate
 
   self._tag      = newID()
   self._isActive = false
   self._isPaused = false
+
+  self._transitionLiteners = {}
 
   return self._tag
 end
@@ -51,6 +48,7 @@ end
 function Tween:setDelta(delta)
   self:stop()
   self._delta = delta
+  self:_update()
 end
 
 
@@ -73,13 +71,14 @@ end
 function Tween:transitionTo(params)
   self:stop()
 
-  self._onStart    = params.onStart or self._onStart
-  self._onUpdate   = params.onUpdate or self._onUpdate
-  self._onPause    = params.onPause or self._onPause
-  self._onResume   = params.onResume or self._onResume
-  self._onComplete = params.onComplete or self._onComplete
-  self._onCancel   = params.onCancel or self._onCancel
-
+  self._transitionLiteners = {
+    onStart    = params.onStart,
+    onUpdate   = params.onUpdate,
+    onPause    = params.onPause,
+    onResume   = params.onResume,
+    onComplete = params.onComplete,
+    onCancel   = params.onCancel,
+  }
 
   transition.to(self, {
     delay      = params.delay,
@@ -147,8 +146,11 @@ function Tween:onStart()
   if not self._isActive then
     Runtime:addEventListener("enterFrame", self)
   end
+
   self._isActive = true
+
   if self._onStart then self._onStart(self._delta) end
+  if self._transitionLiteners.onStart then self._transitionLiteners.onStart(self._delta) end
 end
 
 
@@ -159,6 +161,10 @@ function Tween:onComplete()
 
   self:_update()
   if self._onComplete then self._onComplete(self._delta) end
+
+  local oc = self._transitionLiteners.onComplete
+  self._transitionLiteners = {}
+  if oc then oc(self._delta) end
 end
 
 
@@ -170,6 +176,7 @@ function Tween:onPause()
   end
 
   if self._onPause then self._onPause(self._delta) end
+  if self._transitionLiteners.onPause then self._transitionLiteners.onPause(self._delta) end
 end
 
 
@@ -181,6 +188,7 @@ function Tween:onResume()
   end
 
   if self._onResume then self._onResume(self._delta) end
+  if self._transitionLiteners.onResume then self._transitionLiteners.onResume(self._delta) end
 end
 
 
@@ -195,6 +203,11 @@ function Tween:onCancel()
   self._isPaused = false
 
   if self._onCancel then self._onCancel(self._delta) end
+
+  local oc = self._transitionLiteners.onCancel
+  self._transitionLiteners = {}
+  if oc then oc(self._delta) end
+
 end
 
 
