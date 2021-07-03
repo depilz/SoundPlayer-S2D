@@ -11,6 +11,14 @@ By default the audio folder is `Assets/Audio`, but you can change this by settin
 
 The default extensions are `.ogg` for android and `.aac` for evertying else. You can change this by setting the `defExt` attribute in both libraries.
 
+## Extra notes
+
+* It uses the [audio](https://docs.coronalabs.com/api/library/audio/index.html) library in the core.
+
+* The volume increases logaritmically which makes more sense for our ears.
+
+* It also uses the [transition](https://docs.coronalabs.com/api/library/transition/to.html) library to fade the tracks, so be careful using `transition.pause()`, `transition.resume()`, and `transition.cancel()`.
+
 # DOCUMENTATION
 
 ## MusicPlayer
