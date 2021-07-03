@@ -19,13 +19,15 @@ SoundPlayer.defExt = ".mp3"
 MusicPlayer.defExt = ".mp3"
 ```
 
-## Extra notes
+## NOTES
 
 * It uses the [audio](https://docs.coronalabs.com/api/library/audio/index.html) library in the core.
 
 * The volume increases logaritmically which makes more sense for our ears.
 
 * It also uses the [transition](https://docs.coronalabs.com/api/library/transition/to.html) library to fade the tracks, so be careful using `transition.pause()`, `transition.resume()`, and `transition.cancel()`.
+
+* All sounds and images in this project are taken from the Internet and work under their own licenses.
 
 # DOCUMENTATION
 
