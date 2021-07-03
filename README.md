@@ -22,7 +22,7 @@ I have separated both in 2 different files (Music and sfx) so it is easier to un
 * [Author](#author)
 * [License](#license)
 
-## SETUP
+## Setup
 
 You need to copy the `tween` and `device` lua files in the same folder as the `soundPlayer` and the `musicPlayer`.
 
@@ -38,7 +38,7 @@ SoundPlayer.defExt = ".mp3"
 MusicPlayer.defExt = ".mp3"
 ```
 
-## NOTES
+## Notes
 
 * It uses the [audio](https://docs.coronalabs.com/api/library/audio/index.html) library in the core.
 
@@ -58,7 +58,7 @@ Designed to play music tracks and provide useful tools for it, the MusicPlayer r
 ## Methods
 
 * ### load(track [, ext])
-  * Loads a track located in the audio folder. The track is the actual name of the file and the extension is optional, if not provided it uses `.ogg` for Android and `.aac` for iOS.
+  * Loads a track located in the audio folder. The track is the actual name of the file and the extension is optional, if not provided it uses `.ogg` for Android and `.aac` for everything else.
      ```lua
      MusicPlayer.load("my song", ".wav")
      ```
@@ -89,11 +89,12 @@ The params are the same as in the `play` method with the only difference that th
      })
      ```
 
-* ### fadeOut(time)
+* ### fadeOut([time])
   * Fades out the entire music, so it works normally even if it is currently fading 2 tracks.
+    * The `time`parameter is optional (default is 2000)
 
-* ### getDuration(sound)
-  * Returns the durations of a **loaded** track. It doesn't work to get the duration of a full sequence.
+* ### getDuration(track)
+  * Returns the duration of a **loaded** track.
 
 * ### isPlaying()
   * Returs true if a music is being played.
@@ -113,13 +114,14 @@ The params are the same as in the `play` method with the only difference that th
 
 
 # MusicPlayer sequences
-Still part of the MusicPlayer library, the music sequences are useful when you have a set of tracks that need to be played one after the other, eiher if the structure is something like:`intro` -> `loop for ever`.
+Still part of the MusicPlayer library, the music sequences are useful when you have a set of tracks that need to be played one after the other, eiher if the structure is something like:
+> **`music intro`** -> **`music loop`**.
 
-Or if you want to increase the tension in a battle by leveling up (by command) the strenght of the song.
-  `starts slow` -> `battle started` -> `boss phase 2` -> `boss phase 3` -> `track ends`
+Or if you want to increase the tension in a battle by leveling up (by command) the strenght of the song:
+> **`starts slow`** -> **`battle started`** -> **`boss phase 2`** -> **`boss phase 3`** -> **`track ends`**
 
- The sequence is an array with the necessary data to play each track.
-The node could be either a string or a table:
+The sequence is an array with the necessary data to play each track.
+Each node could be either a string or a table:
 * **String:** Just plays the specified track.
 * **Table:** Containing the `track`, the `loops`, and the `fadeTime` in that order. Only the `track` is mandatory, `loops` is -1 by default and fadeTime is `nil`.
     ```lua
@@ -171,23 +173,27 @@ Now, the following methods are useful to handle these sequences:
 Specifically designed to play sound effects, but could also be used to play enviromental sounds, such as wind or crickets.
 
 ## Methods
-* ### load(sound [, ext] [, useMediaForAndroid])
-  * Pre-loads a sound. The extension works the same as in the MusicPlayer and `useMediaForAndroid` is a flag used if you **NEED** a sound to be loaded and played using the `media` library instead of `audio`, this <I>could</I> be useful if a sound is not being played instantly on Android, but `media` does't have a volume control so it just plays or not depending of the SoundPlayer volume.
+* ### load(sound [, ext] [, useMedia])
+  * Loads a sound. The optional parameters are:
+    * **ext:** The file extension. (Default is `.ogg` for Android and `.aac` for everything else)
+    * **useMedia:** If true, the method is going to load the sound using the [media](https://docs.coronalabs.com/api/library/media/index.html) library instead of `audio`. (Android only, default is false)
      ```lua
      SoundPlayer.load("mySfx", ".mp3")
      ```
+    
+  > _**NOTE:**_ Use the `media` library only if you **NEED** a sound to be loaded and played with `media`, this <I>could</I> be useful if a sound is not being played instantly on Android, but `media` does not have a volume control so it just plays or not depending of the SoundPlayer volume.
+
 
 * ### play(sound [, params])
   * Plays a sound. The optional parameters are:
     * **loops:** The number of times you want the audio to loop
     * **duration:** This will cause the system to play the audio for the specified amount of time and then auto-stop the playback regardless of whether the audio has finished or not.
-    * **ext: Specify** the extension in case the sound has not been loaded yet.
+    * **ext:** Specify the extension in case the sound has not been loaded yet.
     * **onComplete:** Listener for the audio succesful completion.
     * **onCancel:** Listener for the audio playing cancellation.
      ```lua
      SoundPlayer.play("mySfx", {loops = 2})
      ```
-
 * ### getDuration(sound)
   * Returns the duration of a **loaded** sound.
 
