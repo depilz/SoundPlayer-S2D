@@ -3,31 +3,25 @@ local currentFolder = (...):gsub(".soundPlayer", "")
 local device = require(currentFolder..".device")
 local audio = _G.audio
 
--- Configs -------------------------------------------------------------------------------------------------------------
-
-local defExt
-local path = "Assets/Audio/"
-if device.isAndroid and not device.isSimulator then
-  path = path .. ""
-  defExt = ".ogg"
-else
-  path = path .. ""
-  defExt = ".aac"
-end
-
-local folder = path..""
-
-
 -- SoundPlayer ---------------------------------------------------------------------------------------------------------
-
 local SoundPlayer = {}
-
 local soundTable       = {}
 local playTimeRegistry = {}
 local eventSoundTable  = {}
 
 local volume = 1
 local paused = false
+
+local path = "Assets/Audio/"
+if device.isAndroid and not device.isSimulator then
+  path = path .. ""
+  SoundPlayer.defExt = ".ogg"
+else
+  path = path .. ""
+  SoundPlayer.defExt = ".aac"
+end
+
+SoundPlayer.folder = path..""
 
 
 -- Helpers -------------------------------------------------------------------------------------------------------------
@@ -51,7 +45,7 @@ end
 local function loadWithMedia(sound, ext)
   if eventSoundTable[sound] then return false end
 
-  ext = ext or defExt
+  ext = ext or SoundPlayer.defExt
   eventSoundTable[sound] = media.newEventSound("Assets/Audio/Sfx/"..sound..ext)
   if not eventSoundTable[sound] then
     error( "not sound", sound )
@@ -63,7 +57,7 @@ local function playWithMedia(sound)
   if volume < .2 then return end
 
   if not eventSoundTable[sound] then
-    eventSoundTable[sound] = media.newEventSound("Assets/Audio/Sfx/"..sound..defExt)
+    eventSoundTable[sound] = media.newEventSound("Assets/Audio/Sfx/"..sound..SoundPlayer.defExt)
   end
 
   return media.playEventSound(eventSoundTable[sound])
@@ -91,8 +85,8 @@ function SoundPlayer.load(sound, ext, useMediaForAndroid)
     return loadWithMedia(sound)
   end
 
-  ext = ext or defExt
-  soundTable[sound] = audio.loadSound(folder..sound..ext)
+  ext = ext or SoundPlayer.defExt
+  soundTable[sound] = audio.loadSound(SoundPlayer.folder..sound..ext)
 
   assert(soundTable[sound], "Can't load sound: \""..sound..ext.."\"" )
 end
@@ -110,7 +104,7 @@ function SoundPlayer.play(sound, params)
   end
 
   if not soundTable[sound] then
-    soundTable[sound] = audio.loadSound("Assets/Audio/Sfx/"..sound..(params.ext or defExt))
+    soundTable[sound] = audio.loadSound("Assets/Audio/Sfx/"..sound..(params.ext or SoundPlayer.defExt))
   end
 
   return audio.play(soundTable[sound], params)
