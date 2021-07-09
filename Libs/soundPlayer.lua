@@ -46,7 +46,7 @@ local function loadWithMedia(sound, ext)
   if eventSoundTable[sound] then return false end
 
   ext = ext or SoundPlayer.defExt
-  eventSoundTable[sound] = media.newEventSound("Assets/Audio/Sfx/"..sound..ext)
+  eventSoundTable[sound] = media.newEventSound(SoundPlayer.folder..sound..ext)
   if not eventSoundTable[sound] then
     error( "not sound", sound )
   end
@@ -57,7 +57,7 @@ local function playWithMedia(sound)
   if volume < .2 then return end
 
   if not eventSoundTable[sound] then
-    eventSoundTable[sound] = media.newEventSound("Assets/Audio/Sfx/"..sound..SoundPlayer.defExt)
+    eventSoundTable[sound] = media.newEventSound(SoundPlayer.folder..sound..SoundPlayer.defExt)
   end
 
   return media.playEventSound(eventSoundTable[sound])
@@ -104,7 +104,7 @@ function SoundPlayer.play(sound, params)
   end
 
   if not soundTable[sound] then
-    soundTable[sound] = audio.loadSound("Assets/Audio/Sfx/"..sound..(params.ext or SoundPlayer.defExt))
+    soundTable[sound] = audio.loadSound(SoundPlayer.folder..sound..(params.ext or SoundPlayer.defExt))
   end
 
   return audio.play(soundTable[sound], params)
